@@ -1,2 +1,2 @@
 # wanderlust
-I am scum mans
+I am scum man
