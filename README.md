@@ -1,1 +1,1 @@
-#hello, Kui sucks
+#hello
