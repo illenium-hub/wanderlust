@@ -115,7 +115,7 @@ newdata <- merge(number,data)
 data <- filter(newdata,n>=200) # lose about 10000 rows
 ```
      
-```{r}
+```{r,dpi=500}
 ### players data amount
 hist(number$n, density = 3, col = "skyblue", main  = "density = 3")       
 ```
@@ -176,7 +176,7 @@ result                     | goal or miss
 
 # 4.EDA visualization
 ## 4.1 Player's shooting average overyear
-```{r,echo=FALSE}
+```{r,echo=FALSE,dpi=500}
 ### Weight
 p1<-ggplot(season, aes(x=year, y=weight, group=help, width=3)) + geom_line(linetype='dashed',colour='#6600FF') +geom_point(size=2,colour='#6699CC',shape=20)+theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_x_discrete(breaks=c(79,82,85,88,91,94,97,"00","03","06","09",12,15,18))+
   labs(title = "Weight")
@@ -210,7 +210,7 @@ _For the field goal condition, we could see it vibrate overyears and one charact
 _For 3-point field goals, there exists steady increase in recent 30 years and the growth rate increases since 2012 due to the small ball era._      
 
 ## 4.2 Distribution of players' 2-point and 3-point ability overyear
-```{r,echo=FALSE}
+```{r,echo=FALSE,dpi=500}
 ### 2-Point Field Goal Attempts 
 p7<-ggplot(players,aes(x=year,y=`2attempt`,group=year))+geom_boxplot(fill='#CC9966',outlier.colour="#CC6633", outlier.shape=18, outlier.size=1)+scale_fill_brewer(palette = "Set3")+labs(title = "2-Point Field Goal Attempts")+theme(plot.title = element_text(hjust = 0.5))+stat_summary(fun.y = "mean", geom = "point", shape = 16, size = 1, color = "white")
 ### 3-Point Field Goal Attempts
@@ -231,7 +231,7 @@ _Of all the players in the NBA from 1980 to 2017, their shooting trends are obvi
 
 ## 4.3 Shooting preference 2014-2015 season.
 * shoot type preference: It is well acknowledged that 2014-2015 season could be regarded as the beginning of the small ball era,
-```{r,echo=FALSE}
+```{r,echo=FALSE,dpi=500}
 ### range preference
 ggplot(da, aes(x=range)) + 
     geom_histogram(aes(y=..density..),binwidth=.5,colour="#CC6666", fill="#FFCC99") +
@@ -239,7 +239,7 @@ ggplot(da, aes(x=range)) +
     geom_line(stat="density",colour="#990033")
 ```
 _From the first plot we could see player's main scoring distance distribute located in 0-5 meters and 22-25 meters area which indicates players nowadays prefer layup, dunk or throw 3-point balls during the game_   
-```{r,echo=FALSE}
+```{r,echo=FALSE,dpi=500}
 ### shotclock preference
 ggplot(da, aes(x=shotclock)) + 
     geom_histogram(aes(y=..density..),binwidth=.5,colour="#663366", fill="#6699CC") +
@@ -249,7 +249,7 @@ ggplot(da, aes(x=shotclock)) +
 _From the second plot, we could see majority of players prefer more organized attacks, that is to say they are not willing to hurry up shoots or shot until the last second._   
 
 ## 4.4 How variables influence player's shoot result.    
-```{r,echo=FALSE,message=FALSE}
+```{r,echo=FALSE,message=FALSE,dpi=500}
 ### range and distance(result)
 ggplot(da,aes(range, defence))+geom_point(aes(color=factor(result)))+
   geom_vline(xintercept=c(mean(da$range)),color="#CC3300")+
@@ -257,7 +257,7 @@ ggplot(da,aes(range, defence))+geom_point(aes(color=factor(result)))+
   geom_smooth(color="#330033",type=3)
 ```
 _In this plot we can discover the relationships between defence and range categorized by result. It turn out that players could make more shots in 0-9 meters and 25 meters around range. As the range rise, the defence range could correspondlingly rise because defender believes it is difficult to make a shot at far range._  
-```{r,echo=FALSE,message=FALSE}
+```{r,echo=FALSE,message=FALSE,dpi=500}
 ### touch and dribble(result)
 ggplot(da,aes(dribble, touch))+geom_point(aes(color=factor(result)))+
   geom_vline(xintercept=c(mean(da$dribble)),color="#CC3300")+
@@ -267,7 +267,7 @@ ggplot(da,aes(dribble, touch))+geom_point(aes(color=factor(result)))+
 _As we can see, if a players dribble more, they would exert more touching time. While, in this plot we could not see an obvious difference that more dirbbles and touch time could bring to higher hit rate._  
 
 ## 4.5 C-tree analysis 
-```{r,echo=FALSE,message=FALSE}
+```{r,echo=FALSE,message=FALSE,dpi=500}
 library(party)
 formula<-result~location+winlose+period+shotnumber+shotclock+dribble+touch+range+type+defence
 dt<-ctree(formula,da,controls=ctree_control(minsplit=10,maxdepth=3))
@@ -276,7 +276,7 @@ plot(dt)
 _From the C-tree, we could see the decisive relationship between variables, the shooting range large influence the other variables._   
 
 ## 4.6 Corelation Test
-```{r,echo=FALSE}
+```{r,echo=FALSE,dpi=500}
 shot <- da[,c(5:13)]
 M = cor(shot,method = "spearman")
 corrplot::corrplot(M,method = "ellipse")
@@ -323,7 +323,7 @@ _The coefficient of defence: With every 1 level increase in defence level, the e
 _The coefficient of player: With each player, his log odds of shooting percentage would corespond with their own coefficient in the model summary._  
 
 * Model check
-```{r}
+```{r,dpi=500}
 binnedplot(predict(model_1,type="response"), residuals(model_1,type="response"))
 ```
 _In this model, the majority of the coefficient are significant. But the according to the binned residual plot, there exists an obvious pattern(like a character V). What's more the outliers are pretty large, showing that this model does not fit very well. Hence this model needs improvement._   
@@ -358,7 +358,7 @@ summary(m1)
 ```
 _I set players name as pooling principle, so i get nearly 250 groups. From summary of m1 we can see the most coefficients's p-value are quite small and they are significant, indicting the varibales could influence player's shooting result, there might exist mix effect in this model. From the result, we can see the variance is 0.01638, the random effect exists among different players. The AIC and BIC are 154521.8 and 154647.4. Additionally, there exists corelationships between these variables._    
 
-```{r}
+```{r,dpi=500}
 ### check
 pred1 = predict(m1,type = "link")
 red1 = as.numeric(as.character(pred1))-da$result
@@ -384,7 +384,7 @@ summary(m2)
 ```
 _This time, two interaction variables are introduced in the model and i define a random slope mutilevel model. The slope of the range could vary from players.From model2 we can see the most coefficients's p-value are quite small and they are significant, the AIC and BIC are 154590.2 and 154706.2. We could see the range preference could be different because some players(like Lilard) prefer to shoot long distance ball. Additionally, random effect exist between players and shooting range._  
 
-```{r}
+```{r,dpi=500}
 ### check
 pred2 = predict(m2,type = "link")
 red2 = as.numeric(as.character(pred2))-da$result
@@ -397,7 +397,7 @@ plot(red22)+abline(h=0,lwd=4,col="skyblue")
 _The residual plot shows the residuals are randomly distributed but mean value below 0. The qq-plot indicate the residual do not has more information. The model fits well in this way._   
 
 ### random slope and random intercept
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE,dpi=500}
 ### m3
 m3<-glmer(result~location+shotnumber+shotclock+dribble+touch+type+range+defence+
           dribble*touch+type*range+(1+range|name), 
@@ -409,7 +409,7 @@ _Last model i apply is mutilevel level with random intercept and slope. In this 
 summary(m3)
 ```
 _From model3 we can see the most coefficients's p-value are quite small and they are significant. I set players name as pooling principle,and the slope of range varys form different players, the intercept could vary for different players. We could see the range preference could be different because some players(like Lilard) prefer to shoot long distance ball. Additionally, there exists corelationships between these variables._     
-```{r}
+```{r,dpi=500}
 ### check
 pred3 = predict(m3,type = "link")
 red3 = as.numeric(as.character(pred3))-da$result
@@ -452,7 +452,7 @@ _From the anova test we can see the difference between three model are slight. N
 
 # 8.Appendix
 ## shooting period preference  
-```{r,echo=FALSE}
+```{r,echo=FALSE,dpi=500}
 ### count number
 a <- count(da,period)  
 ### adding vectors 
