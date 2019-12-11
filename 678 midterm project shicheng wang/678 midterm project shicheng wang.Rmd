@@ -54,15 +54,15 @@ There are overall three datasets included in the report. For the EDA part, I wil
 ## 2.3 Research question
 For the former part of EDA in this project, I would analyze how players' characteristics and how average skill level could change throughout 70 years based on the relavant database. Main research question of this project is to analyze how each players' series of charactistics could influence the actural shooting ability in each single game.  
 
-# 3.Methodology  
-## 3.1 Data process
-* Data access
-Importing three datasets.
-```{r}
+# 3.Methodology    
+## 3.1 Data process  
+* Data access    
+```{r,echo=FALSE}
 team <- read.csv("/Applications/BU/BU/678 Applied Statistical Modeling/MA678 midterm project/678 midterm project shicheng wang/data/NBA League Averages.csv")
 player <- read.csv("/Applications/BU/BU/678 Applied Statistical Modeling/MA678 midterm project/678 midterm project shicheng wang/data/Seasons_Stats.csv")
 data <- read.csv("/Applications/BU/BU/678 Applied Statistical Modeling/MA678 midterm project/678 midterm project shicheng wang/data/shot_logs.csv")
 ```
+I have imported three datasets. First dataset(named 'team') contains information about whole NBA average data in each year. Second dataset(named 'player') records each player's average data in their career. Third dataset includes every single shot's information took by every player during 2014-2015 season.    
 
 * Data organize
 ```{r,include=FALSE}
@@ -85,7 +85,7 @@ season$`3g` = as.numeric(as.character(season$`3g`))
 season$`3a` = as.numeric(as.character(season$`3a`))
 season$`3p%`= as.numeric(as.character(season$`3p%`))
 ```
-_For the season average dataset, clear the NA data in the beginning. Because the row are arranged from big to small, so i reverse the data order by year, then select the columns which are going to be analyzed in EDA part. In order to be easily understood, i rename the variables' name._        
+For the season average dataset, clear the NA data in the beginning. Because the row are arranged from big to small, so i reverse the data order by year, then select the columns which are going to be analyzed in EDA part. In order to be easily understood, I rename the variables' name.               
 
 ```{r,include=FALSE}
 ### player data
@@ -98,11 +98,10 @@ players <- plyr::rename(players,c(X="number",Year="year",Player="player",Pos="po
                               TS.="trueshoot",X3PAr="3rate",FTr="ftrate",X3P="3goal",X3PA="3attempt",X3P.="3per",X2P="
                               2goal",X2PA="2attempt",X2P.="2per",PTS="point"))
 ```
-_For NBA players dataset, drop out players whose data are incompelete. Then i get all players' dataset from 1980 to 2017. This dataset is used for analyzing player's preference and ability of shooting._        
+For NBA players dataset, drop out players whose data are incompelete. Then i get all players' dataset from 1980 to 2017. This dataset is used for analyzing player's preference and ability of shooting.             
 
 
-For the main dataset, the data cleaning procession shows as below:   
-* Step1: cleaning      
+For the main dataset, the data cleaning procession has a few steps:      
 ```{r,include=FALSE}
 ### clear NA data
 data <- na.omit(data)          # lose almost 6000 rows
@@ -114,15 +113,15 @@ number <- count(data,player_name)
 newdata <- merge(number,data)
 data <- filter(newdata,n>=200) # lose about 10000 rows
 ```
-     
-```{r,dpi=500}
+* Step1: cleaning    
+```{r,echo=FALSE,dpi=500}
 ### players data amount
 hist(number$n, density = 3, col = "skyblue", main  = "density = 3")       
 ```
-_Firstly, clearing the NA value, then calculate how many rows does each player have, and draw a barplot based on each player's data amount. Notice that several players have less than 200 rows which could hinder modeling procession, so i drop these players._   
+_Firstly, clearing the NA value, then calculate how many rows does each player have, and draw a barplot based on each player's data amount. Notice that several players have less than 200 rows which could hinder modeling procession, so i drop these players._     
 
 * Step2: adjustment  
-```{r,warning=FALSE,message=FALSE}
+```{r,warning=FALSE,message=FALSE,echo=FALSE}
 ### select useful column
 data <- dplyr::select(data,-n)
 da <- data[,c(1,4,5,6,7,8,10:15,18)]
@@ -137,16 +136,16 @@ da$winlose=as.numeric(da$winlose)-1     # 1 for win, 0 for lose
 da$result=2-as.numeric(da$result)       # 1 for made, 0 for miss
 da$type=as.numeric(da$type)
 ```
-_After organizing the dataset well, I select specific information and rename the variable name. Additionally, i adjust variables' value which could be beneficial for later analysis._   
+_After organizing the dataset well, I select specific information and rename the variable name. Additionally, i adjust variables' value which could be beneficial for later analysis._      
 
-* Data overview
-The head of shot log.
+* Data overview  
+The head of shot log.  
 ```{r,echo=FALSE}
 knitr::kable(head(da), digits = 4, align = "c",
              caption = 'Overview of shot log',booktabs = TRUE)
 ```
 
-Type variables's categories and overview.     
+Type variables's categories and overview.        
 ```{r,echo=FALSE}
 kable(table(data$LOCATION))
 kable(table(data$PERIOD))
@@ -230,7 +229,8 @@ gridExtra::grid.arrange(p7,p8,p9,p10,p11,p12,ncol = 2)
 _Of all the players in the NBA from 1980 to 2017, their shooting trends are obvious. In the comparasion between 2-point field goals and 3-point field goal, 2-point field goal attempts/goals have been decreasing while 3-point field goal attempts/goals have been increasing. In the meantime, the 2-point field goal percentage keep developing steady, while the 3-point shooting quality increases to an upper level._    
 
 ## 4.3 Shooting preference 2014-2015 season.
-* shoot type preference: It is well acknowledged that 2014-2015 season could be regarded as the beginning of the small ball era,
+* shoot type preference:   
+It is well acknowledged that 2014-2015 season could be regarded as the beginning of the small ball era.  
 ```{r,echo=FALSE,dpi=500}
 ### range preference
 ggplot(da, aes(x=range)) + 
@@ -238,7 +238,7 @@ ggplot(da, aes(x=range)) +
     geom_density(alpha=.2, fill="#66CCFF")+
     geom_line(stat="density",colour="#990033")
 ```
-_From the first plot we could see player's main scoring distance distribute located in 0-5 meters and 22-25 meters area which indicates players nowadays prefer layup, dunk or throw 3-point balls during the game_   
+_From the first plot we could see player's main scoring distance distribute located in 0-5 meters and 22-25 meters area which indicates players nowadays prefer layup, dunk or throw 3-point balls during the game_     
 ```{r,echo=FALSE,dpi=500}
 ### shotclock preference
 ggplot(da, aes(x=shotclock)) + 
@@ -246,10 +246,11 @@ ggplot(da, aes(x=shotclock)) +
     geom_density(alpha=.2, fill="#666699")+
     geom_line(stat="density",colour="#6600CC")
 ```
-_From the second plot, we could see majority of players prefer more organized attacks, that is to say they are not willing to hurry up shoots or shot until the last second._   
+_From the second plot, we could see majority of players prefer more organized attacks, that is to say they are not willing to hurry up shoots or shot until the last second._       
 
-## 4.4 How variables influence player's shoot result.    
-```{r,echo=FALSE,message=FALSE,dpi=500}
+## 4.4 How variables influence player's shoot result.
+### Range and defence classfied by result
+```{r,echo=FALSE,message=FALSE,dpi=500,warning=FALSE}
 ### range and distance(result)
 ggplot(da,aes(range, defence))+geom_point(aes(color=factor(result)))+
   geom_vline(xintercept=c(mean(da$range)),color="#CC3300")+
@@ -257,7 +258,9 @@ ggplot(da,aes(range, defence))+geom_point(aes(color=factor(result)))+
   geom_smooth(color="#330033",type=3)
 ```
 _In this plot we can discover the relationships between defence and range categorized by result. It turn out that players could make more shots in 0-9 meters and 25 meters around range. As the range rise, the defence range could correspondlingly rise because defender believes it is difficult to make a shot at far range._  
-```{r,echo=FALSE,message=FALSE,dpi=500}
+
+### Dribble and touch classfied by result
+```{r,echo=FALSE,message=FALSE,dpi=500,warning=FALSE}
 ### touch and dribble(result)
 ggplot(da,aes(dribble, touch))+geom_point(aes(color=factor(result)))+
   geom_vline(xintercept=c(mean(da$dribble)),color="#CC3300")+
@@ -273,7 +276,7 @@ formula<-result~location+winlose+period+shotnumber+shotclock+dribble+touch+range
 dt<-ctree(formula,da,controls=ctree_control(minsplit=10,maxdepth=3))
 plot(dt)
 ```
-_From the C-tree, we could see the decisive relationship between variables, the shooting range large influence the other variables._   
+_From the C-tree, we could see the decisive relationship between variables. Defence distance could related to touch time and shooting range. Shooting range which largely influence the other variables and might directly related to game result._   
 
 ## 4.6 Corelation Test
 ```{r,echo=FALSE,dpi=500}
@@ -283,26 +286,28 @@ corrplot::corrplot(M,method = "ellipse")
 ```
 _Corelation plot shows there exists obvious relationships ammong touch, dribbles, distance, range, shotclock, type, and shooting result._    
 
-
-After i have done EDA, I believe the players shooting preference has changed so much in recent years that i decide to analyze how their shooting results are influenced by other factor.   
-Based on NBA shot log dataset, I pick some of variables to build the model.  
+**After i have done EDA part, I believe the players shooting preference has changed so much in recent years that i decide to analyze how their shooting results are influenced by other factor. Based on NBA shot log dataset, I pick some of variables to build the model.**    
 
 # 5.Model analysis
 ## 5.1 General linear model
 * Building model    
 The first model i use is general linear model, cause output of the model is bineary distribution, I use the glm function to build model. Model shows below:  
-```{r,message=FALSE}
+```{r,message=FALSE,include=FALSE}
 model_1<-glm(result~location+shotclock+shotnumber+period+dribble+touch+range+defence+type+as.factor(name),family = binomial,da)
 display(model_1)
 ```
-_There are 242 players in my dataset, each player has their own constructed function._  
+
+```{r out.width = "50%", fig.align = "center", echo=FALSE , message=FALSE, warning=FALSE}
+knitr::include_graphics("/Applications/BU/BU/678 Applied Statistical Modeling/MA678 midterm project/678 midterm project shicheng wang/picture/model1.png")
+```
+_There are 242 players in my dataset, each player has their own constructed function.Picture above shows part of the model summary._  
 
 * Interpretation  
-In this model, the majority of the coefficient are significant. Choose my favorite player called Damian Lillard, his predicting function shows below:       
+In this model, the majority of the coefficient are significant. Choose my favorite player called Damian Lillard whose coefficient estimate is 0.10, so his predicting function shows below: 
 
 $$logit(result)=0.01 + 0.04location +0.01shotclock+0.02dribble-0.06touch-0.07range+0.11defence+0.11type+0.1(player) $$
-_In this model, the majority of the coefficient are significant. But the according to the binned residual plot, there 
-exists an obvious pattern, and the outliers are pretty large, hence this model needs improvement._  
+
+_In this model, the majority of the coefficient are significant. But the according to the binned residual plot, there exists an obvious pattern, and the outliers are pretty large, hence this model needs improvement._  
 
 _Intercept: The log odds of shooting percetage of a player is 0.01 when he is playing away with no touch/dribble and no shoot intentation._  
 
@@ -323,42 +328,49 @@ _The coefficient of defence: With every 1 level increase in defence level, the e
 _The coefficient of player: With each player, his log odds of shooting percentage would corespond with their own coefficient in the model summary._  
 
 * Model check
-```{r,dpi=500}
+I draw the binned plots to check if the model fits well.  
+```{r,dpi=500,echo=FALSE}
 binnedplot(predict(model_1,type="response"), residuals(model_1,type="response"))
 ```
 _In this model, the majority of the coefficient are significant. But the according to the binned residual plot, there exists an obvious pattern(like a character V). What's more the outliers are pretty large, showing that this model does not fit very well. Hence this model needs improvement._   
 
 ## 5.2 Bayesian generlized linear model
 The second model i construct is bayesian generlized linear model with proper transformation and interaction, model shows below:   
-```{r}
+```{r,include=FALSE}
 model_2<-rstanarm::stan_glm(result ~         shotnumber+I(shotclock^2)+period+dribble+touch+touch*dribble+type*range+I(range^2)+I(defence^2),
                             family=binomial(),da,cores = 4)
 summary(model_2)
 ```
+
+```{r out.width = "50%", fig.align = "center", echo=FALSE , message=FALSE, warning=FALSE}
+knitr::include_graphics("/Applications/BU/BU/678 Applied Statistical Modeling/MA678 midterm project/678 midterm project shicheng wang/picture/model2.png")
+```
 _Using the binomial family for bayesian general linear model and do the MCMC diagnostics. From the summary, we can see the sample's mean/standard devation and the standard error. The next step to examine this model is to see the simulate y-output of this model_    
 
 * Model check
-```{r}
+I use pp-check function to check the distribution of fitting output.  
+```{r,echo=FALSE}
 rstanarm::pp_check(model_2)
 ```
 _The simulation result show the output of my model is quite corespond with the binomial observation which is 0 or 1, indicating the model fits quite well._  
 _According to the EDA part and the formoer models, I found that there could exist interaction among variables. Moreover, different players could leads to different shooting range and defending strategies. So the next following model i will introduce is mutilevel model._  
 
 ## 5.3 Mutilevel model
-### random intercept
-```{r,message=FALSE,warning=FALSE}
+### Random intercept  
+First model i apply is mutilevel level with random intercept. In this model, different player would has different intercept.  
+```{r,message=FALSE,warning=FALSE,include=FALSE}
 ### m1
 m1<-glmer(result~location+shotnumber+period+shotclock+dribble+touch+type+range+defence+
             dribble*touch+type*range+(1|name), data=da,family = binomial(),REML = T)
 ```
-_First model i apply is mutilevel level with random intercept. In this model, different player would has different intercept._  
-```{r,message=FALSE}
+ 
+```{r,message=FALSE,echo=FALSE}
 ### summary
-summary(m1)
+display(m1)
 ```
 _I set players name as pooling principle, so i get nearly 250 groups. From summary of m1 we can see the most coefficients's p-value are quite small and they are significant, indicting the varibales could influence player's shooting result, there might exist mix effect in this model. From the result, we can see the variance is 0.01638, the random effect exists among different players. The AIC and BIC are 154521.8 and 154647.4. Additionally, there exists corelationships between these variables._    
 
-```{r,dpi=500}
+```{r,dpi=500,echo=FALSE}
 ### check
 pred1 = predict(m1,type = "link")
 red1 = as.numeric(as.character(pred1))-da$result
@@ -370,21 +382,22 @@ plot(red11)+abline(h=mean(red11),lwd=4,col="skyblue")
 ```
 _The residual plot shows the residuals are randomly distributed but mean value also below 0 which could be regarded as a flaw._  
 
-### random slope
-```{r,message=FALSE,warning=FALSE}
+### Random slope
+Second model i apply is mutilevel level with random slope. In this model, different player would has different range slope.    
+```{r,message=FALSE,warning=FALSE,echo=FALSE}
 ### m2
 m2<-glmer(result~location+shotnumber+shotclock+dribble+touch+type+range+defence+
           dribble*touch+type*range+(touch-1|name), 
           data=da,family = binomial(),REML = T)
 ```
-_Second model i apply is mutilevel level with random slope. In this model, different player would has different range slope._    
-```{r}
+  
+```{r,echo=FALSE}
 ### summary
-summary(m2)
+display(m2)
 ```
 _This time, two interaction variables are introduced in the model and i define a random slope mutilevel model. The slope of the range could vary from players.From model2 we can see the most coefficients's p-value are quite small and they are significant, the AIC and BIC are 154590.2 and 154706.2. We could see the range preference could be different because some players(like Lilard) prefer to shoot long distance ball. Additionally, random effect exist between players and shooting range._  
 
-```{r,dpi=500}
+```{r,dpi=500,echo=FALSE}
 ### check
 pred2 = predict(m2,type = "link")
 red2 = as.numeric(as.character(pred2))-da$result
@@ -392,24 +405,25 @@ com2 = data.frame(obs = da$result,pre = pred1) %>% pivot_longer(cols = 1:2,names
 red22 = sample(red2,4000)
 ### check visualization
 car::qqPlot(red22)
-plot(red22)+abline(h=0,lwd=4,col="skyblue")
+plot(red22)+abline(h=mean(red22),lwd=4,col="skyblue")
 ```
-_The residual plot shows the residuals are randomly distributed but mean value below 0. The qq-plot indicate the residual do not has more information. The model fits well in this way._   
+_The residual plot shows the residuals are randomly distributed but mean value below 0. The qq-plot indicate the residual do not has more information but the mean still below 0. The model fits not so well in this way._     
 
-### random slope and random intercept
-```{r, warning=FALSE, message=FALSE,dpi=500}
+### Random slope and random intercept
+Last model i apply is mutilevel level with random intercept and slope. In this model, different player would has different intercept and different range slope.     
+```{r, warning=FALSE, message=FALSE,dpi=500,include=FALSE}
 ### m3
 m3<-glmer(result~location+shotnumber+shotclock+dribble+touch+type+range+defence+
           dribble*touch+type*range+(1+range|name), 
           data=da,family = binomial(),REML = T)
 ```
-_Last model i apply is mutilevel level with random intercept and slope. In this model, different player would has different intercept and different range slope._  
-```{r}
+
+```{r,echo=FALSE}
 ### summary
-summary(m3)
+display(m3)
 ```
 _From model3 we can see the most coefficients's p-value are quite small and they are significant. I set players name as pooling principle,and the slope of range varys form different players, the intercept could vary for different players. We could see the range preference could be different because some players(like Lilard) prefer to shoot long distance ball. Additionally, there exists corelationships between these variables._     
-```{r,dpi=500}
+```{r,dpi=500,echo=FALSE}
 ### check
 pred3 = predict(m3,type = "link")
 red3 = as.numeric(as.character(pred3))-da$result
@@ -422,7 +436,8 @@ plot(red33)
 _The qq-plot and residual plot shows the residuals are randomly normal distributed, while the mean of residual turn to be -1 which henders model's effectiveness._      
 
 ## 5.4 Model evaluation and selection
-```{r}
+In order to measure which kind of mutilevel model is best fitted my dataset, the anova test is conducted.  
+```{r,echo=FALSE}
 anova(m2,m3,m1)
 ```
 _From the anova test we can see the difference between three model are slight. Nonetheless, according to AIC and BIC, the model3 is quite small so we can regard this as a better model. Hence, model 3 has more perfect performance in predicting shooting result._  
